@@ -1,0 +1,17 @@
+{
+  "name": "hoggy",
+  "version": "0.0.1",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RatherSlowTurtle/hoggy"
+  },
+  "devDependencies": {
+    "hog-features": "^1.0.0",
+    "image-js": "^0.21.0",
+    "jest": "^24.8.0"
+  }
+}
