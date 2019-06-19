@@ -9,11 +9,11 @@ Version of https://github.com/image-js/hog that supports other image libraries o
 
 ## Adapter
 
-`getValueXYForChannel` `image, x, y, channel` - Allows passing a custom getter for the pixel XY by channel.
-`toLuma601Greyscale` `image` - Allows passing a custom grayscale transformer.
-`getMaxValue` `image` - Allows passing a custom getter for the maximum pixel colour value.
-`getHeight` `image` - Allows passing a custom getter for the height.
-`getWidth` `image` - Allows passing a custom getter for the width.
+* `getValueXYForChannel` `image, x, y, channel` - Allows passing a custom getter for the pixel XY by channel.
+* `toLuma601Greyscale` `image` - Allows passing a custom grayscale transformer.
+* `getMaxValue` `image` - Allows passing a custom getter for the maximum pixel colour value.
+* `getHeight` `image` - Allows passing a custom getter for the height.
+* `getWidth` `image` - Allows passing a custom getter for the width.
 
 ## Options
 
