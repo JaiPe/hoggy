@@ -1,7 +1,5 @@
 "use strict";
 
-const memoize = require("memoize-one");
-
 const EPSILON = 0.00001;
 const PI_RAD = 180 / Math.PI;
 
