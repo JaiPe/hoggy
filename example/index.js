@@ -11,9 +11,5 @@ const options = {
 (async function example() {
     const image = await Jimp.read("../bobber/me.png");
 
-    hoggy.generate({
-        width: image.getWidth(),
-        height: image.getHeight(),
-        data: image.greyscale().bitmap.data
-    }, options).then(hog => console.log(hog));
+    hoggy.generate(image.bitmap, options).then(hog => console.log(hog));
 })();

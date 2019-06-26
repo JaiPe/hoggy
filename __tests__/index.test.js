@@ -39,7 +39,7 @@ describe("hog test", () => {
     );
     beachBallGrey = beachBall.grey({ algorithm: "luma601" });
 
-    const beachBallJimp = await Jimp.read(Buffer.from(beachBall.toBuffer()));
+    const beachBallJimp = await Jimp.read(beachBall);
     beachBallJimpGrey = beachBallJimp.greyscale();
   });
 
@@ -57,14 +57,7 @@ describe("hog test", () => {
 
   it("hoggy Jimp result (using luma709) should be correct size", () => {
     expect(
-      hoggy.generateSync(
-        {
-          data: beachBallJimpGrey.bitmap.data,
-          width: beachBallJimpGrey.getWidth(),
-          height: beachBallJimpGrey.getHeight()
-        },
-        options
-      ).length
+      hoggy.generateSync(beachBallJimpGrey.bitmap, options).length
     ).toEqual(sizeExpected);
   });
 
