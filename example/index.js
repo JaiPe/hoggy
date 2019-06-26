@@ -1,18 +1,19 @@
-const hoggy = require('../');
-
-const adapter = {
-	getValueXY = (image, x, y, channel) => image.myGetPixelAtFn(x, y, channel),
-    toLuma601Greyscale = image => image.myGreyscale601TransformFn(),
-    getMaxValue = image => image.maxValue,
-    getHeight = image => image.height,
-    getWidth = image => image.width
-};
+const hoggy = require("../");
+const Jimp = require("jimp");
 
 const options = {
-	cellSize: 4,
-	bins: 6,
-	blockSize: 2,
-	blockStride: 1
+    cellSize: 4,
+    bins: 6,
+    blockSize: 2,
+    blockStride: 1
 };
 
-console.log(hoggy(image, options, adapter));
+(async function example() {
+    const image = await Jimp.read("../bobber/me.png");
+
+    hoggy.generate({
+        width: image.getWidth(),
+        height: image.getHeight(),
+        data: image.greyscale().bitmap.data
+    }, options).then(hog => console.log(hog));
+})();

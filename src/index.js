@@ -3,51 +3,53 @@
 const EPSILON = 0.00001;
 const PI_RAD = 180 / Math.PI;
 
-const defaultToLuma601Greyscale = image => image.grey({ algorithm: "luma601" });
-const defaultGetValueXYForChannel = (image, ...args) =>
-  image.getValueXY(...args);
-const defaultGetMaxValue = image => image.maxValue;
-const defaultGetHeight = image => image.height;
-const defaultGetWidth = image => image.width;
+/**
+ * Promise wrapper around generateSync logic
+ * @param {ImageData} pixels - image to transform into a HOG descriptor
+ * @param {object} options
+ * @return {Promise<Array>} Promise of array with the value of the HOG descriptor
+ */
+function generate(imageData, options = {}) {
+  return new Promise((resolve, reject) =>
+    resolve(generateSync(imageData, options))
+  );
+}
 
 /**
  * Extract the HOG of an image
- * @param {image} image - image to transform into a HOG descriptor
+ * @param {ImageData} pixels - image to transform into a HOG descriptor
  * @param {object} options
  * @return {Array} Array with the value of the HOG descriptor
  */
 
-function extractHOG(image, options = {}, adapter = {}) {
+function generateSync(imageData, options = {}) {
+  if (!imageData || !imageData.data || !imageData.width || !imageData.height) {
+    throw new Error(
+      "First argument must be ImageData containing { data, width, height }."
+    );
+  }
+
+  if (
+    imageData.data[0] !== imageData.data[1] ||
+    imageData.data[1] !== imageData.data[2]
+  ) {
+    throw new Error("Image must be pre-processed as a greyscale image.");
+  }
+
   const {
     blockSize = 2,
     blockStride = blockSize / 2,
     norm = "L2",
     cellSize = 4,
-    bins = 6
+    bins = 6,
+    maxValue = 255
   } = options;
 
-  const {
-    getValueXYForChannel = defaultGetValueXYForChannel,
-    toLuma601Greyscale = defaultToLuma601Greyscale,
-    getMaxValue = defaultGetMaxValue,
-    getHeight = defaultGetHeight,
-    getWidth = defaultGetWidth
-  } = adapter;
-
-  const histograms = extractHistograms(
-    image,
-    {
-      cellSize,
-      bins
-    },
-    {
-      getHeight,
-      getWidth,
-      getMaxValue,
-      getValueXYForChannel,
-      toLuma601Greyscale
-    }
-  );
+  const histograms = extractHistograms(imageData, {
+    cellSize,
+    bins,
+    maxValue
+  });
   const blocks = [];
   const blocksHigh = histograms.length - blockSize + 1;
   const blocksWide = histograms[0].length - blockSize + 1;
@@ -69,9 +71,9 @@ function extractHOG(image, options = {}, adapter = {}) {
  * @return {Array<Array<number>>} Array 2D with the histogram, based on the gradient vectors
  */
 
-function extractHistograms(image, options, adapter) {
-  const { cellSize, bins } = options;
-  const vectors = gradientVectors(adapter.toLuma601Greyscale(image), adapter);
+function extractHistograms(imageData, options) {
+  const { cellSize, bins, maxValue } = options;
+  const vectors = gradientVectors(imageData, maxValue);
 
   const cellsWide = Math.floor(vectors[0].length / cellSize);
   const cellsHigh = Math.floor(vectors.length / cellSize);
@@ -191,13 +193,12 @@ function normalize(vector, norm) {
   }
 }
 
-function gradientVectors(
-  image,
-  { getValueXYForChannel, getHeight, getWidth, getMaxValue }
-) {
-  const width = getWidth(image);
-  const height = getHeight(image);
-  const maxValue = getMaxValue(image);
+function getChannelByPixelXY({ data, width }, x, y, channel) {
+  return data[x + y * width + channel];
+}
+
+function gradientVectors(imageData, maxValue) {
+  const { width, height } = imageData;
 
   const vectors = new Array(height);
 
@@ -205,17 +206,17 @@ function gradientVectors(
     vectors[y] = new Array(width);
     for (let x = 0; x < width; x++) {
       const prevX =
-        x === 0 ? 0 : getValueXYForChannel(image, x - 1, y, 0) / maxValue;
+        x === 0 ? 0 : getChannelByPixelXY(imageData, x - 1, y, 0) / maxValue;
       const nextX =
         x === width - 1
           ? 0
-          : getValueXYForChannel(image, x + 1, y, 0) / maxValue;
+          : getChannelByPixelXY(imageData, x + 1, y, 0) / maxValue;
       const prevY =
-        y === 0 ? 0 : getValueXYForChannel(image, x, y - 1, 0) / maxValue;
+        y === 0 ? 0 : getChannelByPixelXY(imageData, x, y - 1, 0) / maxValue;
       const nextY =
         y === height - 1
           ? 0
-          : getValueXYForChannel(image, x, y + 1, 0) / maxValue;
+          : getChannelByPixelXY(imageData, x, y + 1, 0) / maxValue;
 
       // kernel [-1, 0, 1]
       const gradX = -prevX + nextX;
@@ -230,4 +231,7 @@ function gradientVectors(
   return vectors;
 }
 
-module.exports = extractHOG;
+module.exports = {
+  generate,
+  generateSync
+};
