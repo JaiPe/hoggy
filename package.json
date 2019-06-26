@@ -1,6 +1,7 @@
 {
   "name": "hoggy",
   "version": "0.0.1",
+  "typings": "index.d.ts",
   "main": "src/index.js",
   "scripts": {
     "test": "jest"
