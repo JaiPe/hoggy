@@ -12,6 +12,7 @@
   "devDependencies": {
     "hog-features": "^1.0.0",
     "image-js": "^0.21.0",
-    "jest": "^24.8.0"
+    "jest": "^24.8.0",
+    "jimp": "^0.6.4"
   }
 }

@@ -1,23 +1,62 @@
 Hoggy
-====
+===
 
-Version of https://github.com/image-js/hog that supports other image libraries other than image-js for the pixel plucking and grayscaling.
+Version of https://github.com/image-js/hog that works without any image libraries.
+
+# Key Changes
+
+* The grayscaling logic has been removed, meaning a third party will need to perform this before generating the HoG.
+* ImageData is accepted instead of an imageJS instance.
+* Pixel colour extraction is now done implicitly, so there is no requirement of image-js or any instance-methods.
+
+# Examples
+
+```
+const hoggy = require("hoggy");
+const Image = require("image-js");
+
+const photo = await Image.load("./my-photo.png");
+const photoGrey = beachBall.grey({ algorithm: "luma601" });
+hoggy.generate(photoGrey, {
+    cellSize: 4,
+    bins: 6,
+    blockSize: 2,
+    blockStride: 1,
+    maxValue: 255 // new option
+}).then(hog => console.log(hog));
+```
+
+```
+const Jimp = require("jimp");
+
+const image = await Jimp.read("./my-photo.png");
+hoggy.generate({
+    width: image.getWidth(),
+    height: image.getHeight(),
+    data: image.greyscale().bitmap.data
+}, {
+    cellSize: 2,
+    bins: 8    
+}).then(hog => console.log(hog));
+```
 
 # API
 
-`hoggy(image, options, adapter)`
+```js
+// Sync
+hoggy.generateSync(image, options);
 
-## Adapter
-
-* `getValueXYForChannel` `image, x, y, channel` - Allows passing a custom getter for the pixel XY by channel.
-* `toLuma601Greyscale` `image` - Allows passing a custom grayscale transformer.
-* `getMaxValue` `image` - Allows passing a custom getter for the maximum pixel colour value.
-* `getHeight` `image` - Allows passing a custom getter for the height.
-* `getWidth` `image` - Allows passing a custom getter for the width.
+// Async
+hoggy.generate(image, options).then(value => console.log(value));
+```
 
 ## Options
 
-Options are the same as for https://github.com/image-js/hog
+Options are the same as for https://github.com/image-js/hog with the addition of `maxValue`.
+
+# Upcoming
+
+Upcoming features will include splitting an image into segments and processing it on multiple threads.
 
 # Contributions
 
