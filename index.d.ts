@@ -1,5 +1,5 @@
 export declare function generate(
-    imageData: ImageData,
+    imageData: { width: number; height: number; data: Buffer | Uint8ClampedArray | Array<number> },
     options?: {
         maxValue?: number;
         blockSize?: number;
@@ -11,7 +11,7 @@ export declare function generate(
 ): Promise<Array<number>>;
 
 export declare function generateSync(
-    imageData: ImageData,
+    imageData: { width: number; height: number; data: Buffer | Uint8ClampedArray | Array<number> },
     options?: {
         maxValue?: number;
         blockSize?: number;
@@ -21,11 +21,3 @@ export declare function generateSync(
         bins?: number;
     }
 ): Array<number>;
-
-export declare const enum MIME {
-    BMP = "image/bmp",
-    JPEG = "image/jpeg",
-    GIF = "image/gif",
-    TIFF = "image/tiff",
-    PNG = "image/png"
-}
