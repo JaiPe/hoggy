@@ -58,10 +58,10 @@ function generateSync(imageData, options = {}) {
     for (let x = 0; x < blocksWide; x += blockStride) {
       const block = getBlock(histograms, x, y, blockSize);
       normalize(block, norm);
-      blocks.push(block);
+      blocks.push(...block);
     }
   }
-  return Array.prototype.concat.apply([], blocks);
+  return blocks;
 }
 
 /**
@@ -109,10 +109,10 @@ function getBlock(matrix, x, y, length) {
   const square = [];
   for (let i = y; i < y + length; i++) {
     for (let j = x; j < x + length; j++) {
-      square.push(matrix[i][j]);
+      square.push(...matrix[i][j]);
     }
   }
-  return Array.prototype.concat.apply([], square);
+  return square;
 }
 
 /**
