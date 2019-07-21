@@ -11,6 +11,7 @@
     "url": "https://github.com/RatherSlowTurtle/hoggy"
   },
   "devDependencies": {
+    "@types/node": "^12.6.8",
     "hog-features": "^1.0.0",
     "image-js": "^0.21.0",
     "jest": "^24.8.0",

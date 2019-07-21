@@ -1,5 +1,5 @@
 export declare function generate(
-    imageData: { width: number; height: number; data: Array<number> | Uint8Array | Uint8ClampedArray },
+    imageData: { width: number; height: number; data: Array<number> | Uint8Array | Uint8ClampedArray | Buffer },
     options?: {
         maxValue?: number;
         blockSize?: number;
@@ -11,7 +11,7 @@ export declare function generate(
 ): Promise<Array<number>>;
 
 export declare function generateSync(
-    imageData: { width: number; height: number; data: Array<number> | Uint8Array | Uint8ClampedArray },
+    imageData: { width: number; height: number; data: Array<number> | Uint8Array | Uint8ClampedArray | Buffer },
     options?: {
         maxValue?: number;
         blockSize?: number;
