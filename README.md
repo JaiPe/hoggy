@@ -8,6 +8,8 @@ Version of https://github.com/image-js/hog that works without any image librarie
 * The grayscaling logic has been removed, meaning a third party will need to perform this before generating the HoG.
 * ImageData is accepted instead of an imageJS instance.
 * Pixel colour extraction is now done implicitly, so there is no requirement of image-js or any instance-methods.
+* Addition of TypeScript types
+* Promise support
 
 # Examples
 
