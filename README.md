@@ -1,7 +1,7 @@
 Hoggy
 ===
 
-Version of https://github.com/image-js/hog that works without any image libraries.
+Version of https://github.com/image-js/hog that works without any image libraries and uses ES6 and Promises.
 
 # Key Changes
 
